@@ -1,6 +1,6 @@
 body {
   font-family: Arial;
-  background-color: lavender;
+  background-color: #f2f2f2;
 }
 
 .main {
@@ -30,6 +30,7 @@ textarea {
 button {
   padding: 10px 15px;
   cursor: pointer;
+  border: none;
 }
 
 .notes {
@@ -46,15 +47,7 @@ button {
 }
 
 .deleteBtn {
-  margin-top: 10px;
-  background: yellow;
-  color: white;
-  border: none;
-}
-
-.deleteBtn {
   margin-left: 10px;
   background-color: red;
   color: white;
-  border: none;
 }
