@@ -1,0 +1,168 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./App.css";
+
+function App() {
+
+  const [notes, setNotes] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  // Fetch Notes
+  const getNotes = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/notes"
+      );
+
+      setNotes(response.data);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getNotes();
+  }, []);
+
+  // Add Note
+  const addNote = async () => {
+
+    if (title === "" || description === "") {
+      alert("Please fill all fields");
+      return;
+    }
+
+    try {
+
+      await axios.post(
+        "http://localhost:5000/api/notes",
+        {
+          title,
+          description,
+        }
+      );
+
+      setTitle("");
+      setDescription("");
+
+      getNotes();
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Delete Note
+  const deleteNote = async (id) => {
+
+    try {
+
+      await axios.delete(
+        `http://localhost:5000/api/notes/${id}`
+      );
+
+      getNotes();
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Update Note
+  const updateNote = async (id) => {
+
+    const newTitle = prompt("Enter new title");
+    const newDescription = prompt("Enter new description");
+
+    if (!newTitle || !newDescription) {
+      return;
+    }
+
+    try {
+
+      await axios.put(
+        `http://localhost:5000/api/notes/${id}`,
+        {
+          title: newTitle,
+          description: newDescription,
+        }
+      );
+
+      getNotes();
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+
+    <div className="main">
+
+      <h1>Employee Notes Dashboard</h1>
+
+      <div className="form">
+
+        <input
+          type="text"
+          placeholder="Enter title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+
+        <textarea
+          placeholder="Enter description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        ></textarea>
+
+        <button onClick={addNote}>
+          Add Note
+        </button>
+
+      </div>
+
+      <div className="notes">
+
+        {notes.map((note) => (
+
+          <div className="card" key={note._id}>
+
+            <h3>{note.title}</h3>
+
+            <p>{note.description}</p>
+
+            <small>
+              Created At:
+              {" "}
+              {new Date(note.createdAt).toLocaleDateString()}
+            </small>
+
+            <br />
+
+            <button
+              onClick={() => updateNote(note._id)}
+            >
+              Update
+            </button>
+
+            <button
+              className="deleteBtn"
+              onClick={() => deleteNote(note._id)}
+            >
+              Delete
+            </button>
+
+          </div>
+
+        ))}
+
+      </div>
+
+    </div>
+  );
+}
+
+export default App;
