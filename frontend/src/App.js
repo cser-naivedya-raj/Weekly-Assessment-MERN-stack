@@ -8,12 +8,16 @@ function App() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
+  // Render Backend URL
+  const API_URL =
+    "https://weekly-assessment-mern-stack.onrender.com/api/notes";
+
   // Fetch Notes
   const getNotes = async () => {
+
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/notes"
-      );
+
+      const response = await axios.get(API_URL);
 
       setNotes(response.data);
 
@@ -36,13 +40,10 @@ function App() {
 
     try {
 
-      await axios.post(
-        "http://localhost:5000/api/notes",
-        {
-          title,
-          description,
-        }
-      );
+      await axios.post(API_URL, {
+        title,
+        description,
+      });
 
       setTitle("");
       setDescription("");
@@ -59,9 +60,7 @@ function App() {
 
     try {
 
-      await axios.delete(
-        `http://localhost:5000/api/notes/${id}`
-      );
+      await axios.delete(`${API_URL}/${id}`);
 
       getNotes();
 
@@ -82,13 +81,10 @@ function App() {
 
     try {
 
-      await axios.put(
-        `http://localhost:5000/api/notes/${id}`,
-        {
-          title: newTitle,
-          description: newDescription,
-        }
-      );
+      await axios.put(`${API_URL}/${id}`, {
+        title: newTitle,
+        description: newDescription,
+      });
 
       getNotes();
 
@@ -140,6 +136,7 @@ function App() {
               {new Date(note.createdAt).toLocaleDateString()}
             </small>
 
+            <br />
             <br />
 
             <button
